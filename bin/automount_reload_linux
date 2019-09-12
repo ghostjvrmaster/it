@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#HOSTS="$(jq -r '.hosts[] | select(.os_rel == "centos").hostname' /jaunt/groups/it/etc/host_db.json)"
+HOSTS="bigly brie cheeky diwali eldorado flashy freaky frenzy hollywood neato nutty pinwheel shasta sneaky sparky stooge twinkly wacky zappy zippy"
+HOSTS="${HOSTS} crazy cloudgate windy"
+#wonky hydra
+echo "Enter your password if prompted."
+# Next line is just to activate sudo cache
+sudo -u itadmin /bin/bash -c 'ls > /dev/null'
+for host in $HOSTS
+  do
+    sudo -u itadmin /bin/bash -c "ssh -o ConnectTimeout=5 -tt -oStrictHostKeyChecking=no $host sudo systemctl restart autofs > /dev/null 2>&1 && echo $host ok || echo $host error" &
+done
+

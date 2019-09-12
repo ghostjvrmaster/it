@@ -1,0 +1,17 @@
+#!/usr/bin/expect -f
+
+set timeout 300
+set date [timestamp -format "%u"]
+set archive_path "/jaunt/groups/it/backups/OpenDirectory"
+set archive_password "meenlo1234"
+set archive_name "OpenDirectory_Day_"
+
+#spawn /usr/sbin/slapconfig -backupdb $archive_path/$archive_name$date
+system rm -f /tmp/opendirectory_backup.sparseimage
+spawn /usr/sbin/slapconfig -backupdb /tmp/opendirectory_backup
+expect "Enter archive password"
+send "$archive_password\r"
+expect eof
+sleep 5
+
+system cp -f /tmp/opendirectory_backup.sparseimage $archive_path/$archive_name$date
